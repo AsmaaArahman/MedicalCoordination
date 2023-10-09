@@ -1,0 +1,126 @@
+﻿@model MedicalTansik.Models.Student
+
+@{
+    ViewBag.Title = "صفحة  تنسيق الرغبات";
+}
+@section styles {
+    <style>
+     body {
+	 background-color: lightyellow;
+     }
+     .desires-wrapper {
+	 overflow: auto;
+	 height: 50vh;
+	 /* margin:  auto; */
+     }
+     .academic-desire {
+	 background-color: lightpink;
+     }
+
+     .all-process-wrapper {
+	 margin: 50px auto;
+	 margin-bottom: 20px;
+     }
+
+     .card{
+	 margin: 0px auto;
+     }
+    </style>
+    }
+    
+    @Html.Partial("_Navbar_Home")
+
+
+
+    <div class="row fluid-container all-process-wrapper">
+	<div  class="col-sm-5 offset-sm-1  card p-0">
+	    <div class="card-header bg-primary text-light ">
+		الرغبات المتاحة
+	    </div>
+
+	    <div id="desires-container"   class="card-body desires-wrapper">
+		@foreach(var desire in ViewBag.Desires)
+		{
+		<button onclick="event.preventDefault();" class='btn-success   btn-block desire @(desire.IsAcademic? "btn-danger" : "clinical-desire") my-4 '
+			style="cursor: move; width: 70%; margin: 0 auto"
+		    data-id="@(desire.Id)">
+		    <div class="d-inline">
+			<div>
+			    @desire.Name - @(desire.IsAcademic? "أكاديمي" : "إكلينيكي")
+			</div>
+		    </div>
+		</button>
+		}
+	    </div>
+	</div>
+
+	<div  class="col-sm-5 offset-sm-1 card p-0 ">
+	    <div class="card-header bg-primary text-light">
+		الرغبات المُختارة
+	    </div>
+	    <div id="student-desires-container" class="card-body desires-wrapper">
+		
+		
+	    </div>
+	    <div> <button class="btn btn-primary  save m-2">حفظ</button></div>
+
+	</div>
+	
+
+    </div>
+
+
+
+    <!-- Tabs content -->
+
+    @section Scripts {
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+	
+	<script>
+	window.printed = false; //a flag to check if the student printed his desires or not;
+	var element = $("#desires-container")[0];
+	new Sortable(element, {
+            group: 'shared',
+	    sort: false,
+            animation: 150,
+	});
+	var element2 = $("#student-desires-container")[0];
+	
+	new Sortable(element2, {
+            group: 'shared',
+            animation   : 150
+	});
+	</script>
+	
+	<script>
+	
+	$(".save").on("click", function() {
+	    var desiresElement = $("#student-desires-container").find(".desire");
+	    var desires = [];
+	    for(var i=0; i<desiresElement.length; i++) {
+		desires.push($(desiresElement[i]).data("id"));
+	    }
+	    $.ajax("/Med/Home/SaveDesires/", {
+		method: "POST",
+		data: {
+		    action: "ADD_DESIRES",
+		    data: desires,
+		},
+		success: function(data) {
+		    if(data.status == "success")  {
+			alert("تم حفظ الرغبات بنجاح");
+			window.location.reload();
+		    } else if (data.status == "error"){
+			alert("خطأ");
+			alert(data["message"]);
+		    }
+		}
+	    });
+	});
+	
+	
+	</script>
+	
+	
+    }

@@ -1,0 +1,63 @@
+﻿@using MedicalTansik.Models.ViewModels
+@model LoginViewModel
+
+@{
+    ViewBag.Title = "تسجيل الدخول";
+}
+
+@section styles {
+    <link href="/Med/Content/login.css" rel="stylesheet" />
+}
+
+@Html.Partial("_Navbar")
+
+    <div class="container">
+	<!-- <div class="row"> -->
+	<!-- <div class="col-md-6"> -->
+        <section id="loginForm" class="">
+            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.NationalId, new { @class = "control-label" })
+                    <div class="">
+                        @Html.TextBoxFor(m => m.NationalId, new { @class = "form-control p-2" })
+                        @Html.ValidationMessageFor(m => m.NationalId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+                    <div class="">
+
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="">
+                        <button type="submit"  class="btn btn-primary btn-rounded btn-block" >تسجيل الدخول</button>
+                    </div>
+                </div>
+
+            }
+        </section>
+	<!-- </div> <!-- col-md-6  -->
+
+
+	<!-- <div class="col-md-6">
+	     </div>
+	-->
+	<!-- </div> <!-- row  -->
+    </div>
+<footer class="bg-primary text-light p-2 text-center" style="position: fixed; bottom: 0; right: 0; left: 0;">
+    <div class="container">
+        &copy; @DateTime.Now.Year وحدة البرمجيات - مركز الخدمات الالكترونية و المعرفية - جامعة سوهاج <br>
+        مدير مركز الخدمات الإلكترونية والمعرفية : د. محمد حشمت <br>
+        مدير وحدة البرمجيات : م. أسماء أبوالدهب <br>
+    </div>
+</footer>
